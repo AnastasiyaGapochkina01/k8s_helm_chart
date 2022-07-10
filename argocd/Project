@@ -1,0 +1,13 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: django
+  namespace: argocd
+spec:
+  description: Local django app for tests
+  sourceRepos:
+  - '*'
+  destinations:
+    - namespace: app
+      server: https://kubernetes.default.svc
