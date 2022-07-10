@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: django-application
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - type: testing
+        prefix: testing
+        release: django-1
+      - type: testing-2
+        prefix: testing-2
+        release: django-2
+  template:
+    metadata:
+      name: '{{release}}'
+    spec:
+      project: django
+      source:
+        repoURL: http://gitlab/root/kube.git
+        targetRevision: HEAD
+        path: helm-charts/django_app
+        helm:
+          releaseName: '{{release}}'
+          parameters:
+            - name: env.type
+              value: '{{type}}'
+            - name: env.prefix
+              value: '{{prefix}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: app
