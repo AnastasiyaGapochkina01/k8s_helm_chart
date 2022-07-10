@@ -1,0 +1,21 @@
+django:
+  deployment:
+    name:
+    replicas: 1
+  container:
+    name:
+    resources:
+      limits:
+        memory:
+        cpu:
+      requests:
+        memory:
+        cpu:
+  image:
+    repository: 192.168.56.11:5000
+    name: django_local
+    tag: master-1
+    pullPolicy: IfNotPresent
+  env:
+    type:
+    prefix:
