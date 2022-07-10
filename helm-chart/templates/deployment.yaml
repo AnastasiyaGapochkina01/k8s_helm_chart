@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "django.deployment.name" . }}
+  labels:
+    {{- include "django.labels" . | nindent 4 }}    
+spec:
+  replicas: {{ .Values.django.deployment.replicas }}
+  selector:
+    matchLabels:
+      {{- include "django.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "django.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ include "django.container.name" . }}
+        image: "{{ .Values.django.image.repository }}/{{ .Values.django.image.name }}:{{ .Values.django.image.tag }}"
+        imagePullPolicy: {{ .Values.django.image.pullPolicy }}
+        ports:
+        - name: django-port
+          containerPort: 8020
+          protocol: TCP
+        env:
+        - name: LISTEN_PORT
+          value: "8020"
+        - name: PROJECT_NAME
+          value: "myproject"
+        - name: TYPE
+          value: "{{ .Values.env.type }}"
+        - name: PREFIX
+          value: "{{ .Values.env.prefix }}"
